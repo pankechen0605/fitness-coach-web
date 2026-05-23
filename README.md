@@ -10,7 +10,7 @@
 - 饮食记录追踪
 - 历史数据档案
 
-**当前状态**：PR1.9 阶段，Archive 训练计划只读预览。
+**当前状态**：PR1.10 阶段，全局只读模式提示。
 
 ## 本地运行
 
@@ -121,4 +121,5 @@ types/                  # TypeScript 类型定义
 - **PR1.6**: Coach page read-only plan clarity
 - **PR1.7**: Review page read-only clarity
 - **PR1.8**: Diet page read-only log clarity
-- **PR1.9**: Archive read-only training plan preview（当前）
+- **PR1.9**: Archive read-only training plan preview
+- **PR1.10**: Global read-only mode badge（当前）

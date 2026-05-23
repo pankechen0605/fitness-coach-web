@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { Calendar, Clock } from 'lucide-react';
+import { SystemModeBadge } from '@/components/layout/SystemModeBadge';
 
 const pageTitles: Record<string, string> = {
   '/': 'CoachOS 仪表盘',
@@ -30,6 +31,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-800 bg-gray-950/80 px-6 backdrop-blur-sm">
       <h1 className="text-xl font-semibold text-gray-100">{title}</h1>
+      <SystemModeBadge />
       <div className="flex items-center gap-4 text-sm text-gray-400">
         <div className="flex items-center gap-1.5">
           <Calendar className="h-4 w-4" />
