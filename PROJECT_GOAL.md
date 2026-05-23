@@ -63,8 +63,8 @@ Single user (self-hosted). No multi-user support, no authentication, no cloud sy
 | **PR2** | **✅** | **v0.1 Read-only MVP finalization** |
 | PR2.1 | ✅ | Read-time data normalization |
 | **PR2.2** | **✅** | **Archive read-only search & filters** |
-| PR3 | Planned | Write with backup mechanism |
-| PR4 | Planned | AI plan generation |
+| **PR3** | **✅** | **AI Coach API + training plan preview** |
+| PR4 | Planned | Safe write + plan save |
 
 ## Out of Scope (v0.1)
 

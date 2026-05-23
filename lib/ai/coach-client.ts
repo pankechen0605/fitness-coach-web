@@ -1,0 +1,121 @@
+import { getModelConfig } from './model-config';
+import { buildSystemPrompt, buildUserPrompt } from './prompt-builder';
+import type { TrainingRecord, TrainingPlan, DietRecord } from '@/types';
+
+export interface GeneratePlanInput {
+  userMessage: string;
+  recentRecords: TrainingRecord[];
+  recentPlans: TrainingPlan[];
+  recentDiet: DietRecord[];
+}
+
+export interface GeneratePlanResult {
+  ok: true;
+  plan: Record<string, unknown>;
+  rawText: string;
+}
+
+export interface GeneratePlanError {
+  ok: false;
+  error: string;
+  rawText?: string;
+}
+
+export type GeneratePlanResponse = GeneratePlanResult | GeneratePlanError;
+
+/**
+ * Call the AI to generate a training plan.
+ * Uses OpenAI-compatible API format.
+ */
+export async function generatePlan(
+  input: GeneratePlanInput,
+): Promise<GeneratePlanResponse> {
+  const config = getModelConfig();
+  if (!config) {
+    return { ok: false, error: 'AI_API_KEY 未配置。请在 .env.local 中设置 AI_API_KEY 或 OPENAI_API_KEY。' };
+  }
+
+  const systemPrompt = buildSystemPrompt();
+  const userPrompt = buildUserPrompt(
+    input.userMessage,
+    input.recentRecords,
+    input.recentPlans,
+    input.recentDiet,
+  );
+
+  try {
+    const response = await fetch(`${config.baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${config.apiKey}`,
+      },
+      body: JSON.stringify({
+        model: config.model,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+        ],
+        max_tokens: config.maxTokens,
+        temperature: 0.7,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => '');
+      return {
+        ok: false,
+        error: `AI 请求失败: ${response.status} ${response.statusText}`,
+        rawText: errorText,
+      };
+    }
+
+    const data = await response.json();
+    const rawText: string =
+      data?.choices?.[0]?.message?.content ?? '';
+
+    if (!rawText.trim()) {
+      return { ok: false, error: 'AI 返回为空', rawText };
+    }
+
+    // Extract JSON from the response (handle markdown code blocks)
+    const jsonStr = extractJson(rawText);
+    if (!jsonStr) {
+      return {
+        ok: false,
+        error: 'AI 返回中未找到合法 JSON',
+        rawText,
+      };
+    }
+
+    try {
+      const plan = JSON.parse(jsonStr);
+      return { ok: true, plan, rawText };
+    } catch {
+      return {
+        ok: false,
+        error: 'AI 返回的 JSON 解析失败',
+        rawText: jsonStr,
+      };
+    }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return { ok: false, error: `AI 请求异常: ${message}` };
+  }
+}
+
+/**
+ * Extract JSON string from AI response.
+ * Handles markdown code blocks and raw JSON.
+ */
+function extractJson(text: string): string | null {
+  // Try to extract from ```json ... ``` code block
+  const codeBlockMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
+  if (codeBlockMatch) return codeBlockMatch[1].trim();
+
+  // Try to find raw JSON object
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (jsonMatch) return jsonMatch[0].trim();
+
+  return null;
+}

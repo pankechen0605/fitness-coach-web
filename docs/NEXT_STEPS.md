@@ -21,17 +21,23 @@
 - 结果最多显示 20 条，按日期降序
 - 纯前端内存筛选，不写 JSON，不调 API
 
-## PR3 — 写入前备份机制
+## PR3 — AI Coach API + training plan preview ✅
+
+- 新增 `app/api/coach/route.ts` POST 接口
+- 新增 `lib/ai/` 模块（model-config / prompt-builder / coach-client）
+- AI provider 使用 OpenAI 兼容格式，API key 从环境变量读取
+- Prompt 融合 fitness-coach 规则 + 历史训练/饮食/计划数据
+- /coach 页面新增 AICoachPanel：状态、想练/不想练、时间、不适、器械
+- 生成结果展示：人类可读计划 + JSON preview
+- 明确提示：预览未写入文件
+- 不写入 JSON，不保存 training_plans
+
+## PR4 — 安全写入 + 训练计划保存
 
 - 写入前自动备份源 JSON
 - 写入操作需要用户确认
+- AI 生成的计划保存到 training_plans/
 - 写入日志记录
-
-## PR4 — AI 计划生成
-
-- 接入 AI API 生成训练计划
-- 基于历史数据的智能推荐
-- 复盘分析与建议
 
 ## PR5 — 图片上传与识别
 
