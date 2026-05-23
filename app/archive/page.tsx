@@ -46,9 +46,9 @@ export default async function ArchivePage() {
       <Card className="border-dashed border-gray-700 bg-gray-900/50">
         <CardContent className="flex flex-col items-center justify-center p-8">
           <Archive className="mb-3 h-12 w-12 text-gray-600" />
-          <p className="text-sm text-gray-400">文件浏览器</p>
+          <p className="text-sm text-gray-400">只读文件预览</p>
           <p className="mt-1 text-xs text-gray-500">
-            此功能将在后续版本中实现，用于浏览和管理本地 JSON 文件
+            此功能将在后续版本中实现，用于只读查看本地 JSON 文件
           </p>
         </CardContent>
       </Card>
