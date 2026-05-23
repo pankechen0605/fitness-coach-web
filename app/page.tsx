@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { AICommandPanel } from '@/components/dashboard/AICommandPanel';
-import { CoachOutputPanel } from '@/components/dashboard/CoachOutputPanel';
+import { AICommandPanel } from '@/components/coach/AICommandPanel';
+import { CoachOutputPanel } from '@/components/coach/CoachOutputPanel';
 import { WeeklySummaryCards } from '@/components/dashboard/WeeklySummaryCards';
 import { RecentTrainingList } from '@/components/dashboard/RecentTrainingList';
-import { weeklySummary, recentTrainingRecords, coachResponses } from '@/lib/mock-data';
+import { mockWeeklySummary, mockTrainingRecords, mockCoachResponses } from '@/lib/data';
 
 interface Message {
   role: 'user' | 'coach';
@@ -21,7 +21,7 @@ export default function HomePage() {
     setMessages((prev) => [...prev, userMessage]);
 
     // Find matching response
-    const response = coachResponses.find((r) =>
+    const response = mockCoachResponses.find((r) =>
       command.includes(r.input) || r.input.includes(command)
     );
 
@@ -46,7 +46,7 @@ export default function HomePage() {
       </div>
 
       {/* Weekly Summary */}
-      <WeeklySummaryCards summary={weeklySummary} />
+      <WeeklySummaryCards summary={mockWeeklySummary} />
 
       {/* Main content grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -57,7 +57,7 @@ export default function HomePage() {
         </div>
 
         {/* Right column: Recent Training */}
-        <RecentTrainingList records={recentTrainingRecords} />
+        <RecentTrainingList records={mockTrainingRecords} />
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { BarChart3, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { recentTrainingRecords } from '@/lib/mock-data';
+import { mockTrainingRecords } from '@/lib/data';
 import { RATING_CONFIG } from '@/types';
 
 export default function ReviewPage() {
@@ -84,7 +84,7 @@ export default function ReviewPage() {
       <div>
         <h3 className="mb-4 text-lg font-medium text-gray-200">训练记录</h3>
         <div className="space-y-3">
-          {recentTrainingRecords.map((record) => {
+          {mockTrainingRecords.map((record) => {
             const ratingConfig = RATING_CONFIG[record.rating];
             const isSelected = selectedRecord === record.plan_id;
 

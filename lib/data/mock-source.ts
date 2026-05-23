@@ -1,7 +1,7 @@
-import { TrainingRecord, TrainingPlan, DietRecord, WeeklySummary } from '@/types';
+import { TrainingRecord, TrainingPlan, DietRecord, WeeklySummary, CoachResponse } from '@/types';
 
-// 最近训练记录
-export const recentTrainingRecords: TrainingRecord[] = [
+// Mock 训练记录
+export const mockTrainingRecords: TrainingRecord[] = [
   {
     plan_id: '2026-05-22_背部',
     date: '2026-05-22',
@@ -88,8 +88,8 @@ export const recentTrainingRecords: TrainingRecord[] = [
   },
 ];
 
-// 训练计划示例
-export const trainingPlans: TrainingPlan[] = [
+// Mock 训练计划
+export const mockTrainingPlans: TrainingPlan[] = [
   {
     plan_id: '2026-05-24_背部',
     title: '背部训练',
@@ -134,8 +134,8 @@ export const trainingPlans: TrainingPlan[] = [
   },
 ];
 
-// 饮食记录
-export const dietRecords: DietRecord[] = [
+// Mock 饮食记录
+export const mockDietRecords: DietRecord[] = [
   {
     id: 'diet-2026-05-22-breakfast',
     date: '2026-05-22',
@@ -187,8 +187,8 @@ export const dietRecords: DietRecord[] = [
   },
 ];
 
-// 周汇总数据
-export const weeklySummary: WeeklySummary = {
+// Mock 周汇总
+export const mockWeeklySummary: WeeklySummary = {
   trainingDays: 4,
   totalDuration: 220,
   totalCalories: 2280,
@@ -201,8 +201,8 @@ export const weeklySummary: WeeklySummary = {
   },
 };
 
-// AI 教练回复示例
-export const coachResponses = [
+// Mock 教练回复
+export const mockCoachResponses: CoachResponse[] = [
   {
     input: '今天练什么',
     output: `**背部训练计划**

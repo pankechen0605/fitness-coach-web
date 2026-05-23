@@ -5,7 +5,7 @@ import { Dumbbell, Play, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { trainingPlans } from '@/lib/mock-data';
+import { mockTrainingPlans } from '@/lib/data';
 
 export default function CoachPage() {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
@@ -43,7 +43,7 @@ export default function CoachPage() {
       <div>
         <h3 className="mb-4 text-lg font-medium text-gray-200">待执行计划</h3>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {trainingPlans.map((plan) => (
+          {mockTrainingPlans.map((plan) => (
             <Card
               key={plan.plan_id}
               className={`border-gray-800 bg-gray-900 transition-all ${
