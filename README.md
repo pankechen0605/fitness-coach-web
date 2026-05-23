@@ -10,7 +10,7 @@
 - 饮食记录追踪
 - 历史数据档案
 
-**当前状态**：PR1.7 阶段，Review 只读复盘视图优化。
+**当前状态**：PR1.8 阶段，Diet 只读饮食日志视图优化。
 
 ## 本地运行
 
@@ -119,4 +119,5 @@ types/                  # TypeScript 类型定义
 - **PR1.4**: Dashboard metric clarity polish
 - **PR1.5**: Archive 只读档案预览
 - **PR1.6**: Coach page read-only plan clarity
-- **PR1.7**: Review page read-only clarity（当前）
+- **PR1.7**: Review page read-only clarity
+- **PR1.8**: Diet page read-only log clarity（当前）

@@ -1,10 +1,12 @@
 import { Apple } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { DietRecordList } from '@/components/diet/DietRecordList';
+import { DietSourceNotice } from '@/components/diet/DietSourceNotice';
 import { DietRepository } from '@/lib/data';
 
 export default async function DietPage() {
   const dietRecords = await DietRepository.getAll();
+  const source = DietRepository.lastSource;
 
   const totalDailyCalories = dietRecords.reduce(
     (sum, record) => sum + (record.totalCalories ?? 0),
@@ -26,9 +28,12 @@ export default async function DietPage() {
       <div>
         <h2 className="text-2xl font-bold text-gray-100">饮食记录</h2>
         <p className="mt-1 text-sm text-gray-400">
-          追踪每日营养摄入，确保训练效果最大化
+          只读查看饮食日志 · 当前展示 diet_log.json 中的历史饮食记录
         </p>
       </div>
+
+      {/* Source notice */}
+      <DietSourceNotice source={source} recordCount={dietRecords.length} />
 
       {/* Daily summary */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
@@ -78,7 +83,15 @@ export default async function DietPage() {
       </div>
 
       {/* Meals by date */}
-      <DietRecordList records={dietRecords} />
+      {dietRecords.length === 0 ? (
+        <Card className="border-gray-800 bg-gray-900">
+          <CardContent className="p-8 text-center">
+            <p className="text-sm text-gray-400">暂无饮食记录</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <DietRecordList records={dietRecords} />
+      )}
     </div>
   );
 }
