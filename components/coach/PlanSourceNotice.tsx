@@ -32,7 +32,7 @@ export function PlanSourceNotice({ source, pendingCount }: PlanSourceNoticeProps
       {/* Read-only notice */}
       <div className="flex items-center gap-1.5 rounded-md bg-yellow-500/10 px-3 py-1.5">
         <Info className="h-3.5 w-3.5 text-yellow-400" />
-        <span className="text-xs text-yellow-400">只读模式 · AI 生成与写入尚未启用</span>
+        <span className="text-xs text-yellow-400">只读模式 · AI 生成预览可用 · 写入尚未启用</span>
       </div>
     </div>
   );
