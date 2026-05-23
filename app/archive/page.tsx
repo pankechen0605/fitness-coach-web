@@ -3,8 +3,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { DataDirectoryCard } from '@/components/archive/DataDirectoryCard';
 import { DataSourceBadge } from '@/components/archive/DataSourceBadge';
 import { DataQualityCard } from '@/components/archive/DataQualityCard';
+import { ArchiveRecentRecords } from '@/components/archive/ArchiveRecentRecords';
+import { TrainingRepository, DietRepository } from '@/lib/data';
 
 export default async function ArchivePage() {
+  const [trainingRecords, dietRecords] = await Promise.all([
+    TrainingRepository.getAll(),
+    DietRepository.getAll(),
+  ]);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -20,6 +27,12 @@ export default async function ArchivePage() {
 
       {/* Data quality */}
       <DataQualityCard />
+
+      {/* Recent records preview */}
+      <ArchiveRecentRecords
+        trainingRecords={trainingRecords}
+        dietRecords={dietRecords}
+      />
 
       {/* Data directory info */}
       <DataDirectoryCard />
