@@ -5,6 +5,7 @@ import { DataSourceBadge } from '@/components/archive/DataSourceBadge';
 import { DataQualityCard } from '@/components/archive/DataQualityCard';
 import { ArchiveRecentRecords } from '@/components/archive/ArchiveRecentRecords';
 import { ArchivePlanPreview } from '@/components/archive/ArchivePlanPreview';
+import { ArchiveSearchPanel } from '@/components/archive/ArchiveSearchPanel';
 import { TrainingRepository, DietRepository, PlanRepository } from '@/lib/data';
 
 export default async function ArchivePage() {
@@ -26,6 +27,13 @@ export default async function ArchivePage() {
 
       {/* Data source status */}
       <DataSourceBadge />
+
+      {/* Search & filters */}
+      <ArchiveSearchPanel
+        trainingRecords={trainingRecords}
+        dietRecords={dietRecords}
+        trainingPlans={trainingPlans}
+      />
 
       {/* Data quality */}
       <DataQualityCard />

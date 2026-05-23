@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-**v0.1 Read-only MVP complete + PR2.1 Read-time normalization** — 读取时数据标准化层已接入。
+**v0.1 Read-only MVP complete + PR2.2 Archive search & filters** — /archive 支持只读搜索和筛选。
 
 ## 本地运行
 
@@ -30,7 +30,7 @@ npm run build   # 生产构建
 | Coach (`/coach`) | 只读训练计划视图，显示待执行计划 |
 | Review (`/review`) | 只读复盘视图，平均 RPE、完成率、最佳评分 |
 | Diet (`/diet`) | 只读饮食日志，总热量、蛋白质/碳水/脂肪 |
-| Archive (`/archive`) | 训练记录/饮食记录/训练计划预览、数据源状态、数据质量标记 |
+| Archive (`/archive`) | 训练/饮食/计划搜索筛选、记录预览、数据源状态、数据质量标记 |
 
 全局特性：
 - Header 系统模式标识（本地只读 / JSON 数据源 / 无登录 / AI 未启用）
@@ -77,7 +77,7 @@ components/
 ├── coach/              # TrainingPlanList, PlanSourceNotice
 ├── review/             # ReviewRecordList, ReviewSourceNotice
 ├── diet/               # DietRecordList, DietSourceNotice
-└── archive/            # DataSourceBadge, DataQualityCard, ArchiveRecentRecords, ArchivePlanPreview
+└── archive/            # DataSourceBadge, DataQualityCard, ArchiveRecentRecords, ArchivePlanPreview, ArchiveSearchPanel
 
 lib/data/               # 数据层（只读）
 ├── config.ts           # 数据源配置
@@ -112,7 +112,8 @@ docs/                   # 文档
 | PR1.10 | Global read-only mode badge |
 | PR1.11 | Read-only wording consistency cleanup |
 | PR2 | v0.1 Read-only MVP finalization |
-| **PR2.1** | **Read-time data normalization（当前）** |
+| PR2.1 | Read-time data normalization |
+| **PR2.2** | **Archive read-only search & filters（当前）** |
 
 ## 后续方向
 
