@@ -74,13 +74,13 @@ export function DietRecordList({ records }: DietRecordListProps) {
                     {/* Macros */}
                     <div className="mt-3 flex gap-2 border-t border-gray-800 pt-3">
                       <span className="rounded bg-blue-500/10 px-2 py-1 text-xs text-blue-400">
-                        蛋白质 {meal.macros.protein}g
+                        蛋白质 {meal.macros?.protein ?? 0}g
                       </span>
                       <span className="rounded bg-green-500/10 px-2 py-1 text-xs text-green-400">
-                        碳水 {meal.macros.carbs}g
+                        碳水 {meal.macros?.carbs ?? 0}g
                       </span>
                       <span className="rounded bg-yellow-500/10 px-2 py-1 text-xs text-yellow-400">
-                        脂肪 {meal.macros.fat}g
+                        脂肪 {meal.macros?.fat ?? 0}g
                       </span>
                     </div>
                   </CardContent>

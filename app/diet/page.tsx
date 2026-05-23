@@ -7,15 +7,15 @@ export default async function DietPage() {
   const dietRecords = await DietRepository.getAll();
 
   const totalDailyCalories = dietRecords.reduce(
-    (sum, record) => sum + record.totalCalories,
+    (sum, record) => sum + (record.totalCalories ?? 0),
     0
   );
 
   const totalMacros = dietRecords.reduce(
     (acc, record) => ({
-      protein: acc.protein + record.macros.protein,
-      carbs: acc.carbs + record.macros.carbs,
-      fat: acc.fat + record.macros.fat,
+      protein: acc.protein + (record.macros?.protein ?? 0),
+      carbs: acc.carbs + (record.macros?.carbs ?? 0),
+      fat: acc.fat + (record.macros?.fat ?? 0),
     }),
     { protein: 0, carbs: 0, fat: 0 }
   );
