@@ -11,6 +11,8 @@ import {
   ChevronDown,
   ChevronUp,
   Info,
+  Save,
+  CheckCircle2,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -47,12 +49,45 @@ export function AICoachPanel() {
   const [plan, setPlan] = useState<CoachPlanResult | null>(null);
   const [rawText, setRawText] = useState<string | null>(null);
   const [showJson, setShowJson] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
+
+  const handleSave = async () => {
+    if (!plan) return;
+    setSaving(true);
+    setSaveError(null);
+    setSaveSuccess(null);
+
+    try {
+      const res = await fetch('/api/plans/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan }),
+      });
+
+      const data = await res.json();
+
+      if (!data.ok) {
+        setSaveError(data.error || '保存失败');
+        return;
+      }
+
+      setSaveSuccess(`已保存到 ${data.filename}${data.backupPath ? '（已备份旧文件）' : ''}`);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : '保存请求失败');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleGenerate = async () => {
     setLoading(true);
     setError(null);
     setPlan(null);
     setRawText(null);
+    setSaveError(null);
+    setSaveSuccess(null);
 
     // Build message from inputs
     const parts: string[] = [];
@@ -306,12 +341,46 @@ export function AICoachPanel() {
               </div>
             )}
 
-            {/* Preview notice */}
-            <div className="flex items-center gap-2 rounded-md border border-dashed border-gray-700 p-3">
-              <Info className="h-4 w-4 flex-shrink-0 text-gray-500" />
-              <p className="text-xs text-gray-400">
-                以上为 AI 生成的计划预览，尚未写入 training_plans 目录。保存功能将在后续版本实现。
-              </p>
+            {/* Save section */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 rounded-md border border-dashed border-gray-700 p-3">
+                <Info className="h-4 w-4 flex-shrink-0 text-gray-500" />
+                <p className="text-xs text-gray-400">
+                  以上为 AI 生成的计划预览。保存后将写入 training_plans，写入前会自动备份同名旧文件。
+                </p>
+              </div>
+
+              <Button
+                onClick={handleSave}
+                disabled={saving}
+                className="w-full bg-green-600 hover:bg-green-700"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    保存中...
+                  </>
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" />
+                    保存计划到 training_plans
+                  </>
+                )}
+              </Button>
+
+              {saveSuccess && (
+                <div className="flex items-center gap-2 rounded-md bg-green-500/10 p-3">
+                  <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-green-400" />
+                  <p className="text-sm text-green-300">{saveSuccess}</p>
+                </div>
+              )}
+
+              {saveError && (
+                <div className="flex items-center gap-2 rounded-md bg-red-500/10 p-3">
+                  <AlertTriangle className="h-4 w-4 flex-shrink-0 text-red-400" />
+                  <p className="text-sm text-red-300">{saveError}</p>
+                </div>
+              )}
             </div>
 
             {/* JSON toggle */}

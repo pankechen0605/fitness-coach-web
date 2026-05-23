@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-**PR3: AI Coach API + training plan preview** — /coach 支持 AI 生成训练计划预览（不写入 JSON）。
+**PR4: Safe save generated training plan** — /coach 支持 AI 生成计划预览并安全保存到 training_plans。
 
 ## 本地运行
 
@@ -27,7 +27,7 @@ npm run build   # 生产构建
 | 页面 | 功能 |
 |------|------|
 | Dashboard (`/`) | 周训练天数、平均 RPE、评分分布、最近训练列表 |
-| Coach (`/coach`) | 只读训练计划 + AI 生成计划预览（不写入） |
+| Coach (`/coach`) | 只读训练计划 + AI 生成预览 + 安全保存到 training_plans |
 | Review (`/review`) | 只读复盘视图，平均 RPE、完成率、最佳评分 |
 | Diet (`/diet`) | 只读饮食日志，总热量、蛋白质/碳水/脂肪 |
 | Archive (`/archive`) | 训练/饮食/计划搜索筛选、记录预览、数据源状态、数据质量标记 |
@@ -50,8 +50,8 @@ npm run build   # 生产构建
 
 ## 当前明确不支持
 
-- **不写入 JSON** — 不会修改任何源文件
-- **AI 仅生成预览** — PR3 开始接 AI，只生成计划预览，不写入 JSON
+- **仅写入 training_plans** — PR4 开始允许安全写入训练计划（写入前自动备份），仍不写 training_log / diet_log
+- **AI 生成 + 保存** — AI 生成计划预览后可确认保存
 - **不上传图片** — 无图片识别
 - **不登录/认证** — 单人本地使用
 - **不使用数据库** — 纯本地文件
@@ -66,7 +66,8 @@ npm run build   # 生产构建
 ```
 app/
 ├── page.tsx            # Dashboard
-├── api/coach/route.ts  # AI 教练 API（POST，只生成预览，不写入）
+├── api/coach/route.ts  # AI 教练 API（POST，生成预览）
+├── api/plans/save/route.ts # 保存训练计划（POST，带备份）
 ├── coach/page.tsx      # 只读训练计划 + AI 生成预览
 ├── review/page.tsx     # 只读复盘
 ├── diet/page.tsx       # 只读饮食日志
@@ -89,7 +90,8 @@ lib/data/               # 数据层（只读）
 ├── diet-repository.ts
 ├── plan-repository.ts
 ├── dashboard-summary.ts
-└── data-quality.ts     # 只读数据质量检测
+├── data-quality.ts     # 只读数据质量检测
+└── safe-writer.ts      # 安全写入（validate + backup + write training_plans）
 
 lib/ai/                 # AI 教练层
 ├── model-config.ts     # AI 模型配置（环境变量）
@@ -120,7 +122,8 @@ docs/                   # 文档
 | PR2 | v0.1 Read-only MVP finalization |
 | PR2.1 | Read-time data normalization |
 | PR2.2 | Archive read-only search & filters |
-| **PR3** | **AI Coach API + training plan preview（当前）** |
+| PR3 | AI Coach API + training plan preview |
+| **PR4** | **Safe save generated training plan（当前）** |
 
 ## 后续方向
 

@@ -32,12 +32,16 @@
 - 明确提示：预览未写入文件
 - 不写入 JSON，不保存 training_plans
 
-## PR4 — 安全写入 + 训练计划保存
+## PR4 — Safe save generated training plan ✅
 
-- 写入前自动备份源 JSON
-- 写入操作需要用户确认
-- AI 生成的计划保存到 training_plans/
-- 写入日志记录
+- 新增 `lib/data/safe-writer.ts`：validatePlanForSave + saveTrainingPlan
+- 新增 `app/api/plans/save/route.ts` POST 接口
+- 路径限制：只写 training_plans/*.json 和 backups/training_plans/*.json
+- 文件名 sanitize：中文/特殊字符转安全字符
+- 写入前自动备份同名旧文件到 backups/
+- /coach AICoachPanel 新增"保存计划"按钮
+- 保存成功/失败有明确提示
+- 不写 training_log / diet_log
 
 ## PR5 — 图片上传与识别
 
