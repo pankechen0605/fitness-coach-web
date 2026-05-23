@@ -3,21 +3,35 @@ import { mockTrainingPlans } from './mock-source';
 import { DATA_CONFIG } from './config';
 
 /**
+ * 检查是否在服务端环境
+ */
+function isServer(): boolean {
+  return typeof window === 'undefined';
+}
+
+/**
  * 训练计划仓库
- * PR1.1: 返回 mock 数据
- * PR1.2: 从本地 JSON 文件读取
  */
 export class PlanRepository {
   /**
    * 获取所有训练计划
    */
   static async getAll(): Promise<TrainingPlan[]> {
-    if (DATA_CONFIG.USE_MOCK) {
+    if (DATA_CONFIG.USE_MOCK || !isServer()) {
       return mockTrainingPlans;
     }
 
-    // PR1.2: 从本地 JSON 文件读取
-    return mockTrainingPlans;
+    // 服务端环境：从本地 JSON 文件读取
+    const { readTrainingPlans } = await import('./local-json-source');
+    const plans = await readTrainingPlans();
+
+    // 如果真实数据为空，回退到 mock
+    if (plans.length === 0) {
+      console.warn('[PlanRepository] 真实数据为空，使用 mock 数据');
+      return mockTrainingPlans;
+    }
+
+    return plans;
   }
 
   /**

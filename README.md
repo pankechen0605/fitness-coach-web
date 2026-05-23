@@ -10,7 +10,7 @@
 - 饮食记录追踪
 - 历史数据档案
 
-**当前状态**：PR1 阶段，使用 Mock 数据，UI 框架已完成。
+**当前状态**：PR1.2 阶段，支持只读本地 JSON 数据。
 
 ## 本地运行
 
@@ -36,7 +36,24 @@ npm run build
 
 ## 数据说明
 
-本项目使用 Mock 数据进行开发。真实训练数据存储在本地 `D:/AI_Project/fitnessCOACH/` 目录，**不在本仓库中**。
+### 数据来源
+
+本项目从本地 JSON 文件**只读**数据：
+
+- `D:/AI_Project/fitnessCOACH/training_log.json` - 训练日志
+- `D:/AI_Project/fitnessCOACH/diet_log.json` - 饮食日志
+- `D:/AI_Project/fitnessCOACH/training_plans/*.json` - 训练计划
+
+### 数据安全
+
+- **只读**：不写入任何 JSON 文件
+- **不接 AI API**：AI 功能在后续版本实现
+- **不使用数据库**：纯本地文件
+- **真实数据不在仓库中**：`D:/AI_Project/fitnessCOACH/` 目录不提交
+
+### Mock 回退
+
+如果本地 JSON 文件不存在或为空，系统会自动回退到 Mock 数据，确保页面不会崩溃。
 
 ## 项目结构
 
@@ -50,15 +67,42 @@ app/
 
 components/
 ├── layout/             # 布局组件
-└── dashboard/          # 仪表盘组件
+├── dashboard/          # 仪表盘组件
+├── coach/              # 教练相关组件
+├── review/             # 复盘相关组件
+├── diet/               # 饮食相关组件
+└── archive/            # 档案相关组件
 
 lib/
-└── mock-data.ts        # Mock 数据
+├── data/               # 数据层
+│   ├── config.ts       # 数据源配置
+│   ├── mock-source.ts  # Mock 数据
+│   ├── local-json-source.ts  # 本地 JSON 读取
+│   ├── training-repository.ts
+│   ├── diet-repository.ts
+│   ├── plan-repository.ts
+│   └── dashboard-summary.ts
+├── coach/              # 教练逻辑
+│   ├── rules.ts        # 规则引擎
+│   ├── prompt-builder.ts
+│   ├── route-intent.ts
+│   └── schemas.ts
+└── utils.ts
+
+prompts/                # AI 提示词模板
+types/                  # TypeScript 类型定义
 ```
 
 ## 开发原则
 
 - 本地优先，无需数据库
+- 只读本地 JSON，不写入
 - 无需登录认证
 - 深色主题，数据仪表盘风格
 - 数据驱动，不说口号
+
+## 版本历史
+
+- **PR1**: UI/Mock Dashboard 稳定
+- **PR1.1**: 结构整理和数据适配层准备
+- **PR1.2**: 只读本地 JSON 数据接入（当前）

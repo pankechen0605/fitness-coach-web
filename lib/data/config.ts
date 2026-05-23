@@ -10,6 +10,6 @@ export const DATA_CONFIG = {
     TRAINING_PLANS: 'training_plans',
   },
 
-  // Mock 数据标识
-  USE_MOCK: true,
+  // Mock 数据标识（false = 使用本地 JSON）
+  USE_MOCK: false,
 } as const;

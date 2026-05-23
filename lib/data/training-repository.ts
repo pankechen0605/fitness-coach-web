@@ -3,25 +3,35 @@ import { mockTrainingRecords } from './mock-source';
 import { DATA_CONFIG } from './config';
 
 /**
+ * 检查是否在服务端环境
+ */
+function isServer(): boolean {
+  return typeof window === 'undefined';
+}
+
+/**
  * 训练记录仓库
- * PR1.1: 返回 mock 数据
- * PR1.2: 从本地 JSON 文件读取
  */
 export class TrainingRepository {
   /**
    * 获取所有训练记录
    */
   static async getAll(): Promise<TrainingRecord[]> {
-    if (DATA_CONFIG.USE_MOCK) {
+    if (DATA_CONFIG.USE_MOCK || !isServer()) {
       return mockTrainingRecords;
     }
 
-    // PR1.2: 从本地 JSON 文件读取
-    // const filePath = path.join(DATA_CONFIG.LOCAL_DATA_DIR, DATA_CONFIG.FILES.TRAINING_LOG);
-    // const data = await fs.readFile(filePath, 'utf-8');
-    // return JSON.parse(data);
+    // 服务端环境：从本地 JSON 文件读取
+    const { readTrainingLog } = await import('./local-json-source');
+    const records = await readTrainingLog();
 
-    return mockTrainingRecords;
+    // 如果真实数据为空，回退到 mock
+    if (records.length === 0) {
+      console.warn('[TrainingRepository] 真实数据为空，使用 mock 数据');
+      return mockTrainingRecords;
+    }
+
+    return records;
   }
 
   /**

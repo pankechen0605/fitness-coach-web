@@ -1,39 +1,13 @@
-'use client';
-
-import { useState } from 'react';
-import { AICommandPanel } from '@/components/coach/AICommandPanel';
-import { CoachOutputPanel } from '@/components/coach/CoachOutputPanel';
 import { WeeklySummaryCards } from '@/components/dashboard/WeeklySummaryCards';
 import { RecentTrainingList } from '@/components/dashboard/RecentTrainingList';
-import { mockWeeklySummary, mockTrainingRecords, mockCoachResponses } from '@/lib/data';
+import { CoachConsole } from '@/components/coach/CoachConsole';
+import { DashboardSummary, TrainingRepository, mockCoachResponses } from '@/lib/data';
 
-interface Message {
-  role: 'user' | 'coach';
-  content: string;
-}
-
-export default function HomePage() {
-  const [messages, setMessages] = useState<Message[]>([]);
-
-  const handleCommand = (command: string) => {
-    // Add user message
-    const userMessage: Message = { role: 'user', content: command };
-    setMessages((prev) => [...prev, userMessage]);
-
-    // Find matching response
-    const response = mockCoachResponses.find((r) =>
-      command.includes(r.input) || r.input.includes(command)
-    );
-
-    // Add coach response after a short delay
-    setTimeout(() => {
-      const coachMessage: Message = {
-        role: 'coach',
-        content: response?.output || `收到指令：${command}\n\n正在分析您的训练数据...\n\n（此功能将在后续版本中完整实现）`,
-      };
-      setMessages((prev) => [...prev, coachMessage]);
-    }, 500);
-  };
+export default async function HomePage() {
+  const [weeklySummary, recentTrainingRecords] = await Promise.all([
+    DashboardSummary.getWeeklySummary(),
+    TrainingRepository.getRecent(5),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -46,18 +20,15 @@ export default function HomePage() {
       </div>
 
       {/* Weekly Summary */}
-      <WeeklySummaryCards summary={mockWeeklySummary} />
+      <WeeklySummaryCards summary={weeklySummary} />
 
       {/* Main content grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Left column: AI Command + Output */}
-        <div className="space-y-4">
-          <AICommandPanel onSubmit={handleCommand} />
-          <CoachOutputPanel messages={messages} />
-        </div>
+        <CoachConsole responses={mockCoachResponses} />
 
         {/* Right column: Recent Training */}
-        <RecentTrainingList records={mockTrainingRecords} />
+        <RecentTrainingList records={recentTrainingRecords} />
       </div>
     </div>
   );
