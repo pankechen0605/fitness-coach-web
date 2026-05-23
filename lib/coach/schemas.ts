@@ -35,8 +35,7 @@ export function validateTrainingPlan(plan: unknown): boolean {
     typeof p.plan_id === 'string' &&
     typeof p.title === 'string' &&
     typeof p.date === 'string' &&
-    typeof p.duration === 'number' &&
-    p.duration > 0 &&
+    (typeof p.duration === 'number' || typeof p.duration === 'string') &&
     Array.isArray(p.warmup) &&
     Array.isArray(p.main) &&
     Array.isArray(p.finisher)

@@ -38,7 +38,7 @@ export function TrainingPlanList({ plans }: TrainingPlanListProps) {
             <div className="flex items-center gap-4 text-xs text-gray-400">
               <div className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                <span>{plan.duration}分钟</span>
+                <span>{typeof plan.duration === 'number' ? `${plan.duration}分钟` : plan.duration || '—'}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Dumbbell className="h-3 w-3" />

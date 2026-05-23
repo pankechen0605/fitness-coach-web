@@ -32,7 +32,7 @@ export interface TrainingPlan {
   title: string;
   date: string;
   status: string;
-  duration: number;
+  duration: number | string;
   warmup: Exercise[];
   main: Exercise[];
   finisher: Exercise[];

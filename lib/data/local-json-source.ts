@@ -71,12 +71,14 @@ function isDietRecord(item: Record<string, unknown>): boolean {
 }
 
 function isTrainingPlan(item: Record<string, unknown>): boolean {
+  // duration 可以是 number 或 string（真实数据中为 string，如 "60"、"60-70min"）
+  const hasDuration = item.duration !== undefined && item.duration !== null;
   return (
     isString(item.plan_id) &&
     isString(item.title) &&
     isString(item.date) &&
     isString(item.status) &&
-    isNumber(item.duration) &&
+    hasDuration &&
     Array.isArray(item.warmup) &&
     Array.isArray(item.main) &&
     Array.isArray(item.finisher)
