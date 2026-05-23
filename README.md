@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fitness Coach Web
 
-## Getting Started
+本地优先的 AI 私人训练控制台。
 
-First, run the development server:
+## 项目简介
+
+这是一个单人使用的健身训练管理系统，用于：
+- 训练计划管理
+- 训练复盘与评分
+- 饮食记录追踪
+- 历史数据档案
+
+**当前状态**：PR1 阶段，使用 Mock 数据，UI 框架已完成。
+
+## 本地运行
 
 ```bash
+# 安装依赖
+npm install
+
+# 开发模式
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# 访问 http://localhost:3000
+
+# 生产构建
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 技术栈
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Next.js 14 App Router
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Lucide React
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 数据说明
 
-## Learn More
+本项目使用 Mock 数据进行开发。真实训练数据存储在本地 `D:/AI_Project/fitnessCOACH/` 目录，**不在本仓库中**。
 
-To learn more about Next.js, take a look at the following resources:
+## 项目结构
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+app/
+├── page.tsx            # CoachOS 仪表盘
+├── coach/page.tsx      # 今日教练台
+├── review/page.tsx     # 训练复盘
+├── diet/page.tsx       # 饮食记录
+└── archive/page.tsx    # 历史档案
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+components/
+├── layout/             # 布局组件
+└── dashboard/          # 仪表盘组件
 
-## Deploy on Vercel
+lib/
+└── mock-data.ts        # Mock 数据
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 开发原则
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 本地优先，无需数据库
+- 无需登录认证
+- 深色主题，数据仪表盘风格
+- 数据驱动，不说口号
