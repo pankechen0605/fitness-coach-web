@@ -10,7 +10,7 @@
 - 饮食记录追踪
 - 历史数据档案
 
-**当前状态**：PR1.5 阶段，Archive 只读档案预览。
+**当前状态**：PR1.6 阶段，Coach 只读计划视图优化。
 
 ## 本地运行
 
@@ -117,4 +117,5 @@ types/                  # TypeScript 类型定义
 - **PR1.2**: 只读本地 JSON 数据接入
 - **PR1.3**: Review 页面轻量统计完善 + 数据质量标记
 - **PR1.4**: Dashboard metric clarity polish
-- **PR1.5**: Archive 只读档案预览（当前）
+- **PR1.5**: Archive 只读档案预览
+- **PR1.6**: Coach page read-only plan clarity（当前）

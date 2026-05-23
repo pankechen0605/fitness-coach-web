@@ -1,19 +1,24 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrainingPlanList } from '@/components/coach/TrainingPlanList';
+import { PlanSourceNotice } from '@/components/coach/PlanSourceNotice';
 import { PlanRepository } from '@/lib/data';
 
 export default async function CoachPage() {
   const trainingPlans = await PlanRepository.getPending();
+  const source = PlanRepository.lastSource;
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-100">今日教练台</h2>
+        <h2 className="text-2xl font-bold text-gray-100">训练计划</h2>
         <p className="mt-1 text-sm text-gray-400">
-          根据您的状态和历史数据，为您推荐今日训练计划
+          只读查看本地训练计划 · 当前展示 training_plans/*.json 中的待执行计划
         </p>
       </div>
+
+      {/* Source notice */}
+      <PlanSourceNotice source={source} pendingCount={trainingPlans.length} />
 
       {/* Status input */}
       <Card className="border-gray-800 bg-gray-900">
@@ -37,7 +42,15 @@ export default async function CoachPage() {
       {/* Training plans */}
       <div>
         <h3 className="mb-4 text-lg font-medium text-gray-200">待执行计划</h3>
-        <TrainingPlanList plans={trainingPlans} />
+        {trainingPlans.length === 0 ? (
+          <Card className="border-gray-800 bg-gray-900">
+            <CardContent className="p-8 text-center">
+              <p className="text-sm text-gray-400">暂无待执行计划</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <TrainingPlanList plans={trainingPlans} />
+        )}
       </div>
     </div>
   );
