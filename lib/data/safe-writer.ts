@@ -72,16 +72,25 @@ export async function saveTrainingPlan(plan: TrainingPlan): Promise<SaveResponse
 
   // Backup existing file if present
   let backupPath: string | null = null;
+  let fileExists = false;
   try {
     await access(filePath);
-    // File exists — back it up
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const backupFilename = `${timestamp}_${filename}`;
-    const backupFilePath = join(backupDir, backupFilename);
-    await copyFile(filePath, backupFilePath);
-    backupPath = backupFilePath;
+    fileExists = true;
   } catch {
     // File doesn't exist — no backup needed
+  }
+
+  if (fileExists) {
+    try {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const backupFilename = `${timestamp}_${filename}`;
+      const backupFilePath = join(backupDir, backupFilename);
+      await copyFile(filePath, backupFilePath);
+      backupPath = backupFilePath;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      return { ok: false, error: `备份旧文件失败，已中止写入: ${message}` };
+    }
   }
 
   // Write the plan
