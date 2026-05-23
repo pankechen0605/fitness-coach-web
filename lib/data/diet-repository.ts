@@ -1,6 +1,7 @@
 import { DietRecord } from '@/types';
 import { mockDietRecords } from './mock-source';
 import { DATA_CONFIG } from './config';
+import type { DataSource } from './local-json-source';
 
 /**
  * 检查是否在服务端环境
@@ -13,25 +14,27 @@ function isServer(): boolean {
  * 饮食记录仓库
  */
 export class DietRepository {
+  static lastSource: DataSource = 'mock-fallback';
+
   /**
    * 获取所有饮食记录
    */
   static async getAll(): Promise<DietRecord[]> {
     if (DATA_CONFIG.USE_MOCK || !isServer()) {
+      this.lastSource = 'mock-fallback';
       return mockDietRecords;
     }
 
-    // 服务端环境：从本地 JSON 文件读取
     const { readDietLog } = await import('./local-json-source');
-    const records = await readDietLog();
+    const result = await readDietLog();
 
-    // 如果真实数据为空，回退到 mock
-    if (records.length === 0) {
-      console.warn('[DietRepository] 真实数据为空，使用 mock 数据');
+    if (result.data.length === 0) {
+      this.lastSource = 'mock-fallback';
       return mockDietRecords;
     }
 
-    return records;
+    this.lastSource = result.source;
+    return result.data;
   }
 
   /**

@@ -1,10 +1,9 @@
-'use client';
-
 import { Archive } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { DataDirectoryCard } from '@/components/archive/DataDirectoryCard';
+import { DataSourceBadge } from '@/components/archive/DataSourceBadge';
 
-export default function ArchivePage() {
+export default async function ArchivePage() {
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -14,6 +13,9 @@ export default function ArchivePage() {
           访问本地存储的训练数据和计划文件
         </p>
       </div>
+
+      {/* Data source status */}
+      <DataSourceBadge />
 
       {/* Data directory info */}
       <DataDirectoryCard />

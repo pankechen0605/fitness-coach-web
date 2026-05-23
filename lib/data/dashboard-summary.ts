@@ -1,6 +1,7 @@
 import { WeeklySummary, TrainingRecord } from '@/types';
 import { mockWeeklySummary } from './mock-source';
 import { DATA_CONFIG } from './config';
+import type { DataSource } from './local-json-source';
 
 /**
  * 检查是否在服务端环境
@@ -13,34 +14,36 @@ function isServer(): boolean {
  * 仪表盘汇总数据
  */
 export class DashboardSummary {
+  static lastSource: DataSource = 'mock-fallback';
+
   /**
    * 获取周汇总数据
    */
   static async getWeeklySummary(): Promise<WeeklySummary> {
     if (DATA_CONFIG.USE_MOCK || !isServer()) {
+      this.lastSource = 'mock-fallback';
       return mockWeeklySummary;
     }
 
-    // 服务端环境：从训练记录计算
     const { readTrainingLog } = await import('./local-json-source');
-    const records = await readTrainingLog();
+    const result = await readTrainingLog();
 
-    // 如果真实数据为空，回退到 mock
-    if (records.length === 0) {
-      console.warn('[DashboardSummary] 真实数据为空，使用 mock 数据');
+    if (result.data.length === 0) {
+      this.lastSource = 'mock-fallback';
       return mockWeeklySummary;
     }
 
-    return this.calculateFromRecords(records);
+    this.lastSource = result.source;
+    return this.calculateFromRecords(result.data);
   }
 
   /**
    * 从训练记录计算周汇总
+   * - 不伪造训练时长（真实数据无此字段）
+   * - 不伪造热量消耗（真实数据无此字段）
    */
   static calculateFromRecords(records: TrainingRecord[]): WeeklySummary {
     const trainingDays = new Set(records.map((r) => r.date)).size;
-    const totalDuration = records.length * 60; // 假设每次 60 分钟
-    const totalCalories = records.length * 500; // 假设每次 500 kcal
     const averageRPE = records.reduce((sum, r) => sum + r.rpe, 0) / records.length;
 
     const ratingDistribution = records.reduce(
@@ -53,8 +56,8 @@ export class DashboardSummary {
 
     return {
       trainingDays,
-      totalDuration,
-      totalCalories,
+      totalDuration: 0, // 真实数据无此字段，不伪造
+      totalCalories: 0, // 真实数据无此字段，不伪造
       averageRPE: Math.round(averageRPE * 10) / 10,
       ratingDistribution,
     };

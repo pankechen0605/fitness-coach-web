@@ -1,6 +1,7 @@
 import { TrainingRecord } from '@/types';
 import { mockTrainingRecords } from './mock-source';
 import { DATA_CONFIG } from './config';
+import type { DataSource } from './local-json-source';
 
 /**
  * 检查是否在服务端环境
@@ -13,25 +14,27 @@ function isServer(): boolean {
  * 训练记录仓库
  */
 export class TrainingRepository {
+  static lastSource: DataSource = 'mock-fallback';
+
   /**
    * 获取所有训练记录
    */
   static async getAll(): Promise<TrainingRecord[]> {
     if (DATA_CONFIG.USE_MOCK || !isServer()) {
+      this.lastSource = 'mock-fallback';
       return mockTrainingRecords;
     }
 
-    // 服务端环境：从本地 JSON 文件读取
     const { readTrainingLog } = await import('./local-json-source');
-    const records = await readTrainingLog();
+    const result = await readTrainingLog();
 
-    // 如果真实数据为空，回退到 mock
-    if (records.length === 0) {
-      console.warn('[TrainingRepository] 真实数据为空，使用 mock 数据');
+    if (result.data.length === 0) {
+      this.lastSource = 'mock-fallback';
       return mockTrainingRecords;
     }
 
-    return records;
+    this.lastSource = result.source;
+    return result.data;
   }
 
   /**
