@@ -11,11 +11,15 @@
 - Repository 接入：读取原始 JSON → normalize → 过滤 null → 空则 mock fallback
 - 不修改源 JSON 文件，只在读取时标准化
 
-## PR2.2 — 只读筛选/搜索
+## PR2.2 — Archive 只读搜索与筛选 ✅
 
-- /review 按部位/日期筛选
-- /diet 按日期筛选
-- /archive 搜索训练计划
+- 新增 `components/archive/ArchiveSearchPanel.tsx` client component
+- 关键词搜索：训练记录（date/part/rating/notes/results 动作名）、饮食记录（date/meal/foods.name）、训练计划（date/title/status/main 动作名）
+- 类型筛选：全部 / 训练记录 / 饮食记录 / 训练计划
+- 日期筛选：全部 / 最近 7 天 / 最近 30 天
+- 计划状态筛选：全部 / planned / pending / completed / unknown
+- 结果最多显示 20 条，按日期降序
+- 纯前端内存筛选，不写 JSON，不调 API
 
 ## PR3 — 写入前备份机制
 

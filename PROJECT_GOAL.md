@@ -61,8 +61,8 @@ Single user (self-hosted). No multi-user support, no authentication, no cloud sy
 | PR1.3 | ✅ | Review stats + data quality markers |
 | PR1.4–PR1.11 | ✅ | Polish and clarity cleanup |
 | **PR2** | **✅** | **v0.1 Read-only MVP finalization** |
-| PR2.1 | Planned | Data field standardization |
-| PR2.2 | Planned | Read-only filtering/search |
+| PR2.1 | ✅ | Read-time data normalization |
+| **PR2.2** | **✅** | **Archive read-only search & filters** |
 | PR3 | Planned | Write with backup mechanism |
 | PR4 | Planned | AI plan generation |
 
