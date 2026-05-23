@@ -27,7 +27,7 @@ export function DietSourceNotice({ source, recordCount }: DietSourceNoticeProps)
 
       <div className="flex items-center gap-1.5 rounded-md bg-yellow-500/10 px-3 py-1.5">
         <Info className="h-3.5 w-3.5 text-yellow-400" />
-        <span className="text-xs text-yellow-400">只读日志 · 饮食保存与 AI 识别尚未启用</span>
+        <span className="text-xs text-yellow-400">拍照识别饮食已启用 · 记录追加到 diet_log.json</span>
       </div>
     </div>
   );

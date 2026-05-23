@@ -2,6 +2,7 @@ import { Apple } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { DietRecordList } from '@/components/diet/DietRecordList';
 import { DietSourceNotice } from '@/components/diet/DietSourceNotice';
+import { PhotoDietPanel } from '@/components/diet/PhotoDietPanel';
 import { DietRepository } from '@/lib/data';
 
 export default async function DietPage() {
@@ -34,6 +35,9 @@ export default async function DietPage() {
 
       {/* Source notice */}
       <DietSourceNotice source={source} recordCount={dietRecords.length} />
+
+      {/* Photo diet panel */}
+      <PhotoDietPanel />
 
       {/* Daily summary */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">

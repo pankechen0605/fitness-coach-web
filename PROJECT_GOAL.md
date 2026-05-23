@@ -65,6 +65,7 @@ Single user (self-hosted). No multi-user support, no authentication, no cloud sy
 | **PR2.2** | **✅** | **Archive read-only search & filters** |
 | **PR3** | **✅** | **AI Coach API + training plan preview** |
 | **PR4** | **✅** | **Safe save generated training plan** |
+| **PR5** | **✅** | **Photo diet record with AI vision + safe save** |
 
 ## Out of Scope (v0.1)
 

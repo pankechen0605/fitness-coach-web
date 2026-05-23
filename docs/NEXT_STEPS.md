@@ -43,10 +43,16 @@
 - 保存成功/失败有明确提示
 - 不写 training_log / diet_log
 
-## PR5 — 图片上传与识别
+## PR5 — 图片上传与识别 ✅
 
-- 饮食拍照识别
-- 图片压缩与本地存储
+- 新增 `lib/ai/food-client.ts`：Vision API 食物识别（OpenAI + Anthropic 格式）
+- 新增 `lib/data/safe-diet-writer.ts`：saveDietPhoto + appendDietRecord（带备份）
+- 新增 `app/api/diet/photo/analyze/route.ts`：AI 识别预览
+- 新增 `app/api/diet/photo/save/route.ts`：保存图片 + 追加 diet_log.json
+- 新增 `components/diet/PhotoDietPanel.tsx`：上传、餐次选择、AI 识别、预览、保存
+- diet_log.json 写入前必须 backup；backup 失败时中止写入
+- diet_log.json 不存在时创建 [] 再 append；parse 失败时不覆盖，返回错误
+- 图片保存到 diet_photos/，不压缩（原图保存）
 
 ## PR6 — 多设备同步
 
