@@ -17,6 +17,7 @@ export function WeeklySummaryCards({ summary }: WeeklySummaryCardsProps) {
       icon: Dumbbell,
       color: 'text-blue-400',
       bgColor: 'bg-blue-400/10',
+      unavailable: false,
     },
     {
       title: '总时长',
@@ -25,6 +26,7 @@ export function WeeklySummaryCards({ summary }: WeeklySummaryCardsProps) {
       icon: Clock,
       color: 'text-green-400',
       bgColor: 'bg-green-400/10',
+      unavailable: summary.totalDuration === 0,
     },
     {
       title: '消耗热量',
@@ -33,6 +35,7 @@ export function WeeklySummaryCards({ summary }: WeeklySummaryCardsProps) {
       icon: Flame,
       color: 'text-orange-400',
       bgColor: 'bg-orange-400/10',
+      unavailable: summary.totalCalories === 0,
     },
     {
       title: '平均 RPE',
@@ -41,6 +44,7 @@ export function WeeklySummaryCards({ summary }: WeeklySummaryCardsProps) {
       icon: TrendingUp,
       color: 'text-purple-400',
       bgColor: 'bg-purple-400/10',
+      unavailable: false,
     },
   ];
 
@@ -53,11 +57,19 @@ export function WeeklySummaryCards({ summary }: WeeklySummaryCardsProps) {
               <div>
                 <p className="text-xs text-gray-400">{card.title}</p>
                 <div className="mt-1 flex items-baseline gap-1">
-                  <span className="text-2xl font-semibold text-gray-100">
-                    {card.value}
-                  </span>
-                  {card.unit && (
-                    <span className="text-sm text-gray-500">{card.unit}</span>
+                  {card.unavailable ? (
+                    <span className="text-base font-medium text-gray-500">
+                      暂无数据
+                    </span>
+                  ) : (
+                    <>
+                      <span className="text-2xl font-semibold text-gray-100">
+                        {card.value}
+                      </span>
+                      {card.unit && (
+                        <span className="text-sm text-gray-500">{card.unit}</span>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

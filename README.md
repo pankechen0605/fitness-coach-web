@@ -10,7 +10,7 @@
 - 饮食记录追踪
 - 历史数据档案
 
-**当前状态**：PR1.2 阶段，支持只读本地 JSON 数据。
+**当前状态**：PR1.4 阶段，Dashboard 指标清晰度优化。
 
 ## 本地运行
 
@@ -114,4 +114,6 @@ types/                  # TypeScript 类型定义
 
 - **PR1**: UI/Mock Dashboard 稳定
 - **PR1.1**: 结构整理和数据适配层准备
-- **PR1.2**: 只读本地 JSON 数据接入（当前）
+- **PR1.2**: 只读本地 JSON 数据接入
+- **PR1.3**: Review 页面轻量统计完善 + 数据质量标记
+- **PR1.4**: Dashboard metric clarity polish（当前）
