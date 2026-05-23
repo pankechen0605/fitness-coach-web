@@ -4,12 +4,14 @@ import { DataDirectoryCard } from '@/components/archive/DataDirectoryCard';
 import { DataSourceBadge } from '@/components/archive/DataSourceBadge';
 import { DataQualityCard } from '@/components/archive/DataQualityCard';
 import { ArchiveRecentRecords } from '@/components/archive/ArchiveRecentRecords';
-import { TrainingRepository, DietRepository } from '@/lib/data';
+import { ArchivePlanPreview } from '@/components/archive/ArchivePlanPreview';
+import { TrainingRepository, DietRepository, PlanRepository } from '@/lib/data';
 
 export default async function ArchivePage() {
-  const [trainingRecords, dietRecords] = await Promise.all([
+  const [trainingRecords, dietRecords, trainingPlans] = await Promise.all([
     TrainingRepository.getAll(),
     DietRepository.getAll(),
+    PlanRepository.getAll(),
   ]);
 
   return (
@@ -27,6 +29,9 @@ export default async function ArchivePage() {
 
       {/* Data quality */}
       <DataQualityCard />
+
+      {/* Training plan preview */}
+      <ArchivePlanPreview plans={trainingPlans} />
 
       {/* Recent records preview */}
       <ArchiveRecentRecords
