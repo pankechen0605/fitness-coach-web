@@ -3,7 +3,7 @@
 ## Final Outcome
 
 A local-first fitness coach workstation for personal training management. The system provides:
-- Training plan generation and execution tracking
+- Training plan view and tracking
 - Training review with RPE and performance metrics
 - Diet and nutrition logging
 - Historical data archive and browsing
@@ -12,21 +12,36 @@ A local-first fitness coach workstation for personal training management. The sy
 
 Single user (self-hosted). No multi-user support, no authentication, no cloud sync.
 
+## Current Status
+
+**v0.1 Read-only MVP complete.**
+
+- 5 个页面可访问（Dashboard / Coach / Review / Diet / Archive）
+- 只读本地 JSON 数据
+- 本地 JSON 缺失时自动 fallback 到 Mock 数据
+- 数据源状态可见（Local JSON / Mock fallback）
+- 数据质量标记
+- 不写入 JSON，不接 AI，不使用数据库
+
 ## Non-Negotiables
 
-1. **No database in PR1/PR1.1** — Local JSON files only
+1. **No database** — Local JSON files only
 2. **No login/auth** — Single-user local application
 3. **No SaaS/cloud sync** — Data stays on local machine
 4. **No real personal training data committed** — Mock data only in repository
-5. **Private coach workstation UI** — Dark theme, data dashboard style, not a gym marketing page
+5. **Private coach workstation UI** — Dark theme, data dashboard style
+6. **Read-only** — No write to source JSON files
 
 ## Success Criteria
 
-- User can view training plans and mark completion
-- User can review past training sessions with RPE and ratings
-- User can log daily meals and track macros
-- User can browse historical training data
-- Application runs entirely offline with local JSON files
+- [x] User can view training plans (read-only)
+- [x] User can review past training sessions with RPE and ratings (read-only)
+- [x] User can view daily meals and track macros (read-only)
+- [x] User can browse historical training data
+- [x] Application runs entirely offline with local JSON files
+- [ ] User can mark training completion (future)
+- [ ] User can log new meals (future)
+- [ ] AI plan generation (future)
 
 ## Quality Gates
 
@@ -40,19 +55,24 @@ Single user (self-hosted). No multi-user support, no authentication, no cloud sy
 
 | Phase | Status | Description |
 |-------|--------|-------------|
-| PR1 | ✅ Current | UI/Mock Dashboard stable — dark theme, navigation, mock data |
-| PR1.1 | Planned | Project structure and data adapter layer preparation |
-| PR1.2 | Planned | Read-only local JSON data integration |
-| PR1.3 | Planned | Training review/statistics calculation completion |
-| PR2 | Planned | AI prompt/API integration evaluation |
+| PR1 | ✅ | UI/Mock Dashboard stable |
+| PR1.1 | ✅ | Project structure and data adapter layer |
+| PR1.2 | ✅ | Read-only local JSON data integration |
+| PR1.3 | ✅ | Review stats + data quality markers |
+| PR1.4–PR1.11 | ✅ | Polish and clarity cleanup |
+| **PR2** | **✅** | **v0.1 Read-only MVP finalization** |
+| PR2.1 | Planned | Data field standardization |
+| PR2.2 | Planned | Read-only filtering/search |
+| PR3 | Planned | Write with backup mechanism |
+| PR4 | Planned | AI plan generation |
 
-## Out of Scope
+## Out of Scope (v0.1)
 
 - Database (PostgreSQL, SQLite, etc.)
 - Authentication/login system
 - SaaS deployment
 - Cloud sync
-- Real AI API integration (PR1)
-- Real training data import (PR1)
-- Mobile responsive design (PR1)
-- Complex charts (PR1)
+- AI API integration
+- Image upload
+- Write/edit/save operations
+- Complex charts (recharts/chart.js/d3)

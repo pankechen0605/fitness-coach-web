@@ -1,5 +1,6 @@
 import { WeeklySummaryCards } from '@/components/dashboard/WeeklySummaryCards';
 import { RecentTrainingList } from '@/components/dashboard/RecentTrainingList';
+import { MVPStatusCard } from '@/components/dashboard/MVPStatusCard';
 import { CoachConsole } from '@/components/coach/CoachConsole';
 import { DashboardSummary, TrainingRepository, mockCoachResponses } from '@/lib/data';
 
@@ -23,12 +24,15 @@ export default async function HomePage() {
       <WeeklySummaryCards summary={weeklySummary} />
 
       {/* Main content grid */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left column: AI Command + Output */}
         <CoachConsole responses={mockCoachResponses} />
 
-        {/* Right column: Recent Training */}
+        {/* Middle column: Recent Training */}
         <RecentTrainingList records={recentTrainingRecords} />
+
+        {/* Right column: MVP Status */}
+        <MVPStatusCard />
       </div>
     </div>
   );
