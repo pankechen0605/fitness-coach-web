@@ -6,6 +6,13 @@ export { DashboardSummary } from './dashboard-summary';
 export { DATA_CONFIG } from './config';
 export type { DataSource } from './local-json-source';
 
+// 数据标准化
+export {
+  normalizeTrainingRecord,
+  normalizeDietRecord,
+  normalizeTrainingPlan,
+} from './normalizers';
+
 // 数据质量检测
 export {
   inspectTrainingRecords,

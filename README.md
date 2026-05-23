@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-**v0.1 Read-only MVP complete** — PR2 阶段收口。
+**v0.1 Read-only MVP complete + PR2.1 Read-time normalization** — 读取时数据标准化层已接入。
 
 ## 本地运行
 
@@ -35,7 +35,7 @@ npm run build   # 生产构建
 全局特性：
 - Header 系统模式标识（本地只读 / JSON 数据源 / 无登录 / AI 未启用）
 - 数据源状态 badge（Local JSON / Mock fallback）
-- 旧格式/坏数据只读兼容
+- 读取时数据标准化（旧格式/缺字段/字符串数字/未知枚举自动修复）
 - 本地 JSON 缺失时自动 fallback 到 Mock 数据
 
 ## 数据来源
@@ -82,7 +82,8 @@ components/
 lib/data/               # 数据层（只读）
 ├── config.ts           # 数据源配置
 ├── mock-source.ts      # Mock 数据
-├── local-json-source.ts # 本地 JSON 读取
+├── local-json-source.ts # 本地 JSON 读取（返回原始对象）
+├── normalizers.ts      # 读取时数据标准化（纯函数）
 ├── training-repository.ts
 ├── diet-repository.ts
 ├── plan-repository.ts
@@ -110,7 +111,8 @@ docs/                   # 文档
 | PR1.9 | Archive read-only training plan preview |
 | PR1.10 | Global read-only mode badge |
 | PR1.11 | Read-only wording consistency cleanup |
-| **PR2** | **v0.1 Read-only MVP finalization（当前）** |
+| PR2 | v0.1 Read-only MVP finalization |
+| **PR2.1** | **Read-time data normalization（当前）** |
 
 ## 后续方向
 

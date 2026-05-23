@@ -1,11 +1,9 @@
 import { TrainingRecord } from '@/types';
 import { mockTrainingRecords } from './mock-source';
+import { normalizeTrainingRecord } from './normalizers';
 import { DATA_CONFIG } from './config';
 import type { DataSource } from './local-json-source';
 
-/**
- * 检查是否在服务端环境
- */
 function isServer(): boolean {
   return typeof window === 'undefined';
 }
@@ -28,13 +26,18 @@ export class TrainingRepository {
     const { readTrainingLog } = await import('./local-json-source');
     const result = await readTrainingLog();
 
-    if (result.data.length === 0) {
+    // normalize 原始数据，过滤 null
+    const normalized = result.data
+      .map(normalizeTrainingRecord)
+      .filter((r): r is TrainingRecord => r !== null);
+
+    if (normalized.length === 0) {
       this.lastSource = 'mock-fallback';
       return mockTrainingRecords;
     }
 
     this.lastSource = result.source;
-    return result.data;
+    return normalized;
   }
 
   /**

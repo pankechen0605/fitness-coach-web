@@ -1,11 +1,9 @@
 import { DietRecord } from '@/types';
 import { mockDietRecords } from './mock-source';
+import { normalizeDietRecord } from './normalizers';
 import { DATA_CONFIG } from './config';
 import type { DataSource } from './local-json-source';
 
-/**
- * 检查是否在服务端环境
- */
 function isServer(): boolean {
   return typeof window === 'undefined';
 }
@@ -28,13 +26,18 @@ export class DietRepository {
     const { readDietLog } = await import('./local-json-source');
     const result = await readDietLog();
 
-    if (result.data.length === 0) {
+    // normalize 原始数据，过滤 null
+    const normalized = result.data
+      .map(normalizeDietRecord)
+      .filter((r): r is DietRecord => r !== null);
+
+    if (normalized.length === 0) {
       this.lastSource = 'mock-fallback';
       return mockDietRecords;
     }
 
     this.lastSource = result.source;
-    return result.data;
+    return normalized;
   }
 
   /**

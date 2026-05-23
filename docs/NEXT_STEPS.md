@@ -2,11 +2,14 @@
 
 以下为可能的后续演进方向，当前均未实现。
 
-## PR2.1 — 数据字段标准化
+## PR2.1 — 读取时数据标准化 ✅
 
-- 统一 training_log.json 中的字段格式
-- 处理 duration 字符串转数字（如 "60-70min" → number）
-- 标准化 rating 枚举值
+- 新增 `lib/data/normalizers.ts` 纯函数标准化层
+- `normalizeTrainingRecord`：rpe 字符串转数字 + clamp 0-10、rating 未知→okay、缺字段安全 fallback
+- `normalizeDietRecord`：totalCalories 字符串转数字、macros 缺失→0、foods 非数组→[]
+- `normalizeTrainingPlan`：duration 字符串提取数字（"60-70min"→60）、缺字段安全 fallback
+- Repository 接入：读取原始 JSON → normalize → 过滤 null → 空则 mock fallback
+- 不修改源 JSON 文件，只在读取时标准化
 
 ## PR2.2 — 只读筛选/搜索
 

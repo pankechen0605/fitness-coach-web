@@ -1,5 +1,4 @@
 import 'server-only';
-import { TrainingRecord, TrainingPlan, DietRecord } from '@/types';
 import { DATA_CONFIG } from './config';
 
 const DATA_DIR = DATA_CONFIG.LOCAL_DATA_DIR;
@@ -18,85 +17,30 @@ export interface DataResult<T> {
 }
 
 /**
- * 安全读取 JSON 文件
- * - 只读，不写入
- * - 文件不存在、解析失败时返回空数组
- * - 过滤 null/undefined/非 object
+ * 判断是否为非空对象
  */
-type ObjectGuard = (item: Record<string, unknown>) => boolean;
-
 function isObjectRecord(item: unknown): item is Record<string, unknown> {
   if (item === null || item === undefined || typeof item !== 'object') {
     return false;
   }
-  // 过滤空对象
-  const keys = Object.keys(item);
-  return keys.length > 0;
+  return Object.keys(item).length > 0;
 }
 
-function isString(value: unknown): value is string {
-  return typeof value === 'string';
-}
-
-function isNumber(value: unknown): value is number {
-  return typeof value === 'number' && Number.isFinite(value);
-}
-
-function isRating(value: unknown): value is TrainingRecord['rating'] {
-  return value === 'great' || value === 'good' || value === 'okay' || value === 'bad';
-}
-
-function isTrainingRecord(item: Record<string, unknown>): boolean {
-  return (
-    isString(item.plan_id) &&
-    isString(item.date) &&
-    isString(item.part) &&
-    isNumber(item.rpe) &&
-    isRating(item.rating) &&
-    isString(item.notes) &&
-    Array.isArray(item.results) &&
-    Array.isArray(item.adjustments)
-  );
-}
-
-function isDietRecord(item: Record<string, unknown>): boolean {
-  return (
-    isString(item.id) &&
-    isString(item.date) &&
-    isString(item.meal) &&
-    Array.isArray(item.foods) &&
-    isNumber(item.totalCalories) &&
-    isObjectRecord(item.macros)
-  );
-}
-
-function isTrainingPlan(item: Record<string, unknown>): boolean {
-  // duration 可以是 number 或 string（真实数据中为 string，如 "60"、"60-70min"）
-  const hasDuration = item.duration !== undefined && item.duration !== null;
-  return (
-    isString(item.plan_id) &&
-    isString(item.title) &&
-    isString(item.date) &&
-    isString(item.status) &&
-    hasDuration &&
-    Array.isArray(item.warmup) &&
-    Array.isArray(item.main) &&
-    Array.isArray(item.finisher)
-  );
-}
-
-async function safeReadJson<T>(
-  filePath: string,
-  guard: ObjectGuard
-): Promise<DataResult<T>> {
+/**
+ * 安全读取 JSON 文件
+ * - 只读，不写入
+ * - 文件不存在、解析失败时返回空数组
+ * - 过滤 null/undefined/非 object
+ * - 不做字段验证，由 repository 层 normalize
+ */
+async function safeReadJson(filePath: string): Promise<DataResult<Record<string, unknown>>> {
   const { readFile } = await import('fs/promises');
   try {
     const content = await readFile(filePath, 'utf-8');
     const parsed = JSON.parse(content);
     const arr = Array.isArray(parsed) ? parsed : [parsed];
 
-    // 过滤 null/undefined/非 object/缺少页面必需字段的记录
-    const valid = arr.filter((item) => isObjectRecord(item) && guard(item)) as T[];
+    const valid = arr.filter(isObjectRecord);
 
     if (valid.length === 0) {
       console.warn(`[local-json-source] 文件无有效记录: ${filePath}`);
@@ -117,27 +61,27 @@ async function safeReadJson<T>(
 }
 
 /**
- * 读取训练日志
+ * 读取训练日志（原始对象，由 repository 层 normalize）
  */
-export async function readTrainingLog(): Promise<DataResult<TrainingRecord>> {
+export async function readTrainingLog(): Promise<DataResult<Record<string, unknown>>> {
   const { join } = await import('path');
   const filePath = join(DATA_DIR, 'training_log.json');
-  return safeReadJson<TrainingRecord>(filePath, isTrainingRecord);
+  return safeReadJson(filePath);
 }
 
 /**
- * 读取饮食日志
+ * 读取饮食日志（原始对象，由 repository 层 normalize）
  */
-export async function readDietLog(): Promise<DataResult<DietRecord>> {
+export async function readDietLog(): Promise<DataResult<Record<string, unknown>>> {
   const { join } = await import('path');
   const filePath = join(DATA_DIR, 'diet_log.json');
-  return safeReadJson<DietRecord>(filePath, isDietRecord);
+  return safeReadJson(filePath);
 }
 
 /**
- * 读取所有训练计划
+ * 读取所有训练计划（原始对象，由 repository 层 normalize）
  */
-export async function readTrainingPlans(): Promise<DataResult<TrainingPlan>> {
+export async function readTrainingPlans(): Promise<DataResult<Record<string, unknown>>> {
   const { join } = await import('path');
   const { readdir } = await import('fs/promises');
   const plansDir = join(DATA_DIR, 'training_plans');
@@ -151,18 +95,18 @@ export async function readTrainingPlans(): Promise<DataResult<TrainingPlan>> {
       return { data: [], source: 'mock-fallback' };
     }
 
-    const allPlans: TrainingPlan[] = [];
+    const allRaw: Record<string, unknown>[] = [];
     for (const file of jsonFiles) {
       const filePath = join(plansDir, file);
-      const result = await safeReadJson<TrainingPlan>(filePath, isTrainingPlan);
-      allPlans.push(...result.data);
+      const result = await safeReadJson(filePath);
+      allRaw.push(...result.data);
     }
 
-    if (allPlans.length === 0) {
+    if (allRaw.length === 0) {
       return { data: [], source: 'mock-fallback' };
     }
 
-    return { data: allPlans, source: 'local' };
+    return { data: allRaw, source: 'local' };
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
       console.warn(`[local-json-source] 目录不存在: ${plansDir}`);

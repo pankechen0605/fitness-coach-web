@@ -1,5 +1,6 @@
 import { WeeklySummary, TrainingRecord } from '@/types';
 import { mockWeeklySummary } from './mock-source';
+import { normalizeTrainingRecord } from './normalizers';
 import { DATA_CONFIG } from './config';
 import type { DataSource } from './local-json-source';
 
@@ -28,13 +29,18 @@ export class DashboardSummary {
     const { readTrainingLog } = await import('./local-json-source');
     const result = await readTrainingLog();
 
-    if (result.data.length === 0) {
+    // normalize 原始数据
+    const normalized = result.data
+      .map(normalizeTrainingRecord)
+      .filter((r): r is TrainingRecord => r !== null);
+
+    if (normalized.length === 0) {
       this.lastSource = 'mock-fallback';
       return mockWeeklySummary;
     }
 
     this.lastSource = result.source;
-    return this.calculateFromRecords(result.data);
+    return this.calculateFromRecords(normalized);
   }
 
   /**
