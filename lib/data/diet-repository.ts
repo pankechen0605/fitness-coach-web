@@ -58,7 +58,7 @@ export class DietRepository {
    */
   static async getDailyCalories(date: string): Promise<number> {
     const records = await this.getByDate(date);
-    return records.reduce((sum, r) => sum + r.totalCalories, 0);
+    return records.reduce((sum, r) => sum + (r.totalCalories ?? 0), 0);
   }
 
   /**
@@ -68,9 +68,9 @@ export class DietRepository {
     const records = await this.getByDate(date);
     return records.reduce(
       (acc, r) => ({
-        protein: acc.protein + r.macros.protein,
-        carbs: acc.carbs + r.macros.carbs,
-        fat: acc.fat + r.macros.fat,
+        protein: acc.protein + (r.macros?.protein ?? 0),
+        carbs: acc.carbs + (r.macros?.carbs ?? 0),
+        fat: acc.fat + (r.macros?.fat ?? 0),
       }),
       { protein: 0, carbs: 0, fat: 0 }
     );

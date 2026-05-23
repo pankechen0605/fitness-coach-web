@@ -1,6 +1,6 @@
 'use client';
 
-import { Coffee, Sun, Moon, Cookie } from 'lucide-react';
+import { Coffee, Sun, Moon, Cookie, HelpCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DietRecord } from '@/types';
 
@@ -11,18 +11,30 @@ const mealConfig: Record<string, { label: string; icon: React.ElementType; color
   snack: { label: '加餐', icon: Cookie, color: 'text-purple-400' },
 };
 
+// 默认配置，用于未知餐次
+const defaultMealConfig = { label: '未知餐次', icon: HelpCircle, color: 'text-gray-400' };
+
 interface DietRecordListProps {
   records: DietRecord[];
 }
 
 export function DietRecordList({ records }: DietRecordListProps) {
+  if (!records || records.length === 0) {
+    return (
+      <div className="rounded-lg border border-gray-800 bg-gray-900 p-8 text-center">
+        <p className="text-sm text-gray-400">暂无饮食记录</p>
+      </div>
+    );
+  }
+
   // Group by date
   const groupedByDate = records.reduce(
     (acc, record) => {
-      if (!acc[record.date]) {
-        acc[record.date] = [];
+      const date = record.date || '未知日期';
+      if (!acc[date]) {
+        acc[date] = [];
       }
-      acc[record.date].push(record);
+      acc[date].push(record);
       return acc;
     },
     {} as Record<string, DietRecord[]>
@@ -35,8 +47,10 @@ export function DietRecordList({ records }: DietRecordListProps) {
           <h3 className="mb-4 text-lg font-medium text-gray-200">{date}</h3>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {meals.map((meal) => {
-              const config = mealConfig[meal.meal];
+              const config = mealConfig[meal.meal] || defaultMealConfig;
               const Icon = config.icon;
+              const foods = Array.isArray(meal.foods) ? meal.foods : [];
+              const totalCalories = meal.totalCalories ?? 0;
 
               return (
                 <Card key={meal.id} className="border-gray-800 bg-gray-900">
@@ -49,22 +63,22 @@ export function DietRecordList({ records }: DietRecordListProps) {
                         </CardTitle>
                       </div>
                       <span className="text-sm font-medium text-gray-300">
-                        {meal.totalCalories} kcal
+                        {totalCalories} kcal
                       </span>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      {meal.foods.map((food, idx) => (
+                      {foods.map((food, idx) => (
                         <div
                           key={idx}
                           className="flex items-center justify-between text-sm"
                         >
-                          <span className="text-gray-300">{food.name}</span>
+                          <span className="text-gray-300">{food.name || '未命名食物'}</span>
                           <div className="flex items-center gap-3">
-                            <span className="text-gray-500">{food.amount}</span>
+                            <span className="text-gray-500">{food.amount || ''}</span>
                             <span className="text-gray-400">
-                              {food.calories} kcal
+                              {food.calories ?? 0} kcal
                             </span>
                           </div>
                         </div>

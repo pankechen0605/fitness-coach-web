@@ -26,7 +26,12 @@ export interface DataResult<T> {
 type ObjectGuard = (item: Record<string, unknown>) => boolean;
 
 function isObjectRecord(item: unknown): item is Record<string, unknown> {
-  return item !== null && item !== undefined && typeof item === 'object';
+  if (item === null || item === undefined || typeof item !== 'object') {
+    return false;
+  }
+  // 过滤空对象
+  const keys = Object.keys(item);
+  return keys.length > 0;
 }
 
 function isString(value: unknown): value is string {

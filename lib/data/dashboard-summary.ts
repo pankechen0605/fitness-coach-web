@@ -44,11 +44,21 @@ export class DashboardSummary {
    */
   static calculateFromRecords(records: TrainingRecord[]): WeeklySummary {
     const trainingDays = new Set(records.map((r) => r.date)).size;
-    const averageRPE = records.reduce((sum, r) => sum + r.rpe, 0) / records.length;
+    const validRPEs = records
+      .map((r) => r.rpe)
+      .filter((rpe) => typeof rpe === 'number' && Number.isFinite(rpe));
+    const averageRPE =
+      validRPEs.length > 0
+        ? validRPEs.reduce((sum, rpe) => sum + rpe, 0) / validRPEs.length
+        : 0;
 
     const ratingDistribution = records.reduce(
       (acc, r) => {
-        acc[r.rating]++;
+        if (r.rating === 'great' || r.rating === 'good' || r.rating === 'bad') {
+          acc[r.rating]++;
+        } else {
+          acc.okay++;
+        }
         return acc;
       },
       { great: 0, good: 0, okay: 0, bad: 0 }
