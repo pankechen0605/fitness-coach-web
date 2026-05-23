@@ -1,6 +1,7 @@
 import { BarChart3, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { ReviewRecordList } from '@/components/review/ReviewRecordList';
+import { ReviewSourceNotice } from '@/components/review/ReviewSourceNotice';
 import { TrainingRepository } from '@/lib/data';
 import { RATING_CONFIG, Rating } from '@/types';
 
@@ -13,6 +14,7 @@ const RATING_RANK: Record<Rating, number> = {
 
 export default async function ReviewPage() {
   const trainingRecords = await TrainingRepository.getAll();
+  const source = TrainingRepository.lastSource;
 
   // 计算平均 RPE
   const validRPEs = trainingRecords
@@ -47,9 +49,12 @@ export default async function ReviewPage() {
       <div>
         <h2 className="text-2xl font-bold text-gray-100">训练复盘</h2>
         <p className="mt-1 text-sm text-gray-400">
-          分析历史训练数据，识别模式，持续优化
+          只读查看训练复盘记录 · 当前展示 training_log.json 中的历史训练记录
         </p>
       </div>
+
+      {/* Source notice */}
+      <ReviewSourceNotice source={source} recordCount={trainingRecords.length} />
 
       {/* Stats overview */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -99,7 +104,15 @@ export default async function ReviewPage() {
       {/* Training records */}
       <div>
         <h3 className="mb-4 text-lg font-medium text-gray-200">训练记录</h3>
-        <ReviewRecordList records={trainingRecords} />
+        {trainingRecords.length === 0 ? (
+          <Card className="border-gray-800 bg-gray-900">
+            <CardContent className="p-8 text-center">
+              <p className="text-sm text-gray-400">暂无训练记录</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <ReviewRecordList records={trainingRecords} />
+        )}
       </div>
     </div>
   );
