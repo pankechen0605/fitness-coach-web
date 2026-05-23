@@ -2,6 +2,7 @@ import { Archive } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { DataDirectoryCard } from '@/components/archive/DataDirectoryCard';
 import { DataSourceBadge } from '@/components/archive/DataSourceBadge';
+import { DataQualityCard } from '@/components/archive/DataQualityCard';
 
 export default async function ArchivePage() {
   return (
@@ -16,6 +17,9 @@ export default async function ArchivePage() {
 
       {/* Data source status */}
       <DataSourceBadge />
+
+      {/* Data quality */}
+      <DataQualityCard />
 
       {/* Data directory info */}
       <DataDirectoryCard />

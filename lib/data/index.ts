@@ -6,6 +6,15 @@ export { DashboardSummary } from './dashboard-summary';
 export { DATA_CONFIG } from './config';
 export type { DataSource } from './local-json-source';
 
+// 数据质量检测
+export {
+  inspectTrainingRecords,
+  inspectDietRecords,
+  buildDataQualityReport,
+  detectSuspiciousText,
+} from './data-quality';
+export type { DataQualityIssue, DataQualityReport, FullDataQualityReport } from './data-quality';
+
 // 导出 mock 数据（用于测试和开发）
 export {
   mockTrainingRecords,

@@ -59,6 +59,10 @@ npm run build
 
 读取层会对旧格式/坏数据做只读兼容：过滤 null、非 object、空对象、缺少必需字段的记录，不会写回源 JSON。
 
+### 数据质量标记
+
+系统会在历史档案页进行只读数据质量标记，用于提示旧格式/疑似乱码记录，不会写回源 JSON。
+
 ## 项目结构
 
 ```
@@ -85,7 +89,8 @@ lib/
 │   ├── training-repository.ts
 │   ├── diet-repository.ts
 │   ├── plan-repository.ts
-│   └── dashboard-summary.ts
+│   ├── dashboard-summary.ts
+│   └── data-quality.ts    # 只读数据质量检测
 ├── coach/              # 教练逻辑
 │   ├── rules.ts        # 规则引擎
 │   ├── prompt-builder.ts
